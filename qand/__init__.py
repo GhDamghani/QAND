@@ -1,3 +1,1 @@
-from . diffeq import DiffEq
-from . trajectory import Trajectory
-from . bifurcation import Bifurcation
+from . diffeq import DiffEq, Trajectory, Bifurcation

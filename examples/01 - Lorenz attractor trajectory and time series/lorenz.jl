@@ -1,4 +1,4 @@
-function lorenz(du, u, p, t)
+function lorenz!(du, u, p, t)
   x, y, z = u
   sigma, rho, beta = p
   du[1] = sigma * (y - x)
