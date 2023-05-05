@@ -1,10 +1,10 @@
 from diffeqpy import ode
 from numpy import transpose, full, nan, argmax
 from julia import Main
-from numpy import save as np_save, load as np_load
+from numpy import save as np_save, load as np_load, savez as np_savez
 from zipfile import ZipFile
 from functools import partial
-from os import remove as os_remove
+from os import remove as os_remove, mkdir, chdir, listdir
 from scipy.signal import find_peaks
 from numpy import diff
 np_save = partial(np_save, allow_pickle = True)
@@ -41,8 +41,8 @@ class DiffEq:
             os_remove(x)
         
     
-    @staticmethod
-    def load(file):
+    @classmethod
+    def load(cls, file):
         with ZipFile(file, mode="r") as archive:
             archive.extractall()
         diffeq = Main.eval(f'''using Serialization: deserialize;
@@ -51,7 +51,7 @@ class DiffEq:
         
         for x in DiffEq._io_file_names:
             os_remove(x)
-        return DiffEq(diffeq, ndim)
+        return cls(diffeq, ndim)
         
 
 
@@ -69,10 +69,10 @@ class DiffEq:
             ind = 0
         t = sol.t[ind:]
         u = transpose(sol.u[ind:])
-        traj = Trajectory(self, t, u, p, u0, tspan, solver)
+        traj = Trajectory(self, t=t, u=u, p=p, u0=u0, tspan=tspan, solver=solver)
         return traj
 
-    def bifurcation(self, p_ind, p, p_array, u0, tspan, transient=1, mode='max', reltol=1E-5, abstol=1E-5, time_res=1E-2, u0_forward=False, num_points=500, tqdm=False):
+    def bifurcation(self, p_ind, p, p_array, u0, tspan, transient=1, mode='max', reltol=1E-3, abstol=1E-3, time_res=1E-1, u0_forward=False, num_points=500, tqdm=False):
         assert p_array.ndim == 1
         p_array_len = p_array.shape[0]
         bif_mat = full((p_array_len, num_points), nan)
@@ -93,8 +93,8 @@ class DiffEq:
             if u0_forward:
                 u0 = traj.u[:, -1]
         solver = traj.solver
-        bif = Bifurcation(self, bif_mat, p_ind, p, p_array,
-                          u0, tspan, mode, u0_forward, solver)
+        bif = Bifurcation(self, bif_mat=bif_mat, p_ind=p_ind, p=p, p_array=p_array,
+                          u0=u0, tspan=tspan, mode=mode, u0_forward=u0_forward, solver=solver)
         return bif
 
 
@@ -102,7 +102,7 @@ class Trajectory:
     _symbols = ('x', 'y', 'z')
     _fontname = 'Times New Roman'
     _fontsize = 20
-    _io_file_names = ('diffeq.qand', 't.npy', 'u.npy', 'p.npy', 'u0.npy', 'tspan.npy', 'solver.npy')
+    _io_file_names = ('diffeq.qand', 'parameters.npz')
 
     def __init__(self, diffeq, t, u, p, u0, tspan, solver) -> None:
         self.diffeq = diffeq
@@ -115,33 +115,29 @@ class Trajectory:
     
     def save(self, file) -> None:
         self.diffeq.save(Trajectory._io_file_names[0])
-        np_save(Trajectory._io_file_names[1], self.t)
-        np_save(Trajectory._io_file_names[2], self.u)
-        np_save(Trajectory._io_file_names[3], self.p)
-        np_save(Trajectory._io_file_names[4], self.u0)
-        np_save(Trajectory._io_file_names[5], self.tspan)
-        np_save(Trajectory._io_file_names[6], self.solver)
+        np_savez(Trajectory._io_file_names[1], t=self.t, u=self.u, p=self.p, u0=self.u0, tspan=self.tspan, solver=self.solver)
         with ZipFile(file, mode="w") as archive:
             for filename in Trajectory._io_file_names:
                 archive.write(filename)
         for x in Trajectory._io_file_names:
             os_remove(x)
     
-    @staticmethod
-    def load(file):
+    @classmethod
+    def load(cls, file):
         with ZipFile(file, mode="r") as archive:
             archive.extractall()
         diffeq = DiffEq.load(Trajectory._io_file_names[0])
-        t = np_load(Trajectory._io_file_names[1])
-        u = np_load(Trajectory._io_file_names[2])
-        p = np_load(Trajectory._io_file_names[3])
-        u0 = np_load(Trajectory._io_file_names[4])
-        tspan = np_load(Trajectory._io_file_names[5])
-        solver = np_load(Trajectory._io_file_names[6])
+        parameters = np_load(Trajectory._io_file_names[1])
+        t = parameters['t']
+        u = parameters['u']
+        p = parameters['p']
+        u0 = parameters['u0']
+        tspan = parameters['tspan']
+        solver = parameters['solver']
         
         for x in Trajectory._io_file_names:
             os_remove(x)
-        return Trajectory(diffeq, t, u, p, u0, tspan, solver)
+        return cls(diffeq=diffeq, t=t, u=u, p=p, u0=u0, tspan=tspan, solver=solver)
 
     def plot_trajectory(self, ax, alpha=0.8, fontname=_fontname, fontsize=_fontsize):
         assert self.diffeq.ndim == 3
@@ -197,15 +193,7 @@ class Bifurcation:
     
     def save(self, file) -> None:
         self.diffeq.save(Bifurcation._io_file_names[0])
-        np_save(Bifurcation._io_file_names[1], self.bif_mat)
-        np_save(Bifurcation._io_file_names[2], self.p_ind)
-        np_save(Bifurcation._io_file_names[3], self.p)
-        np_save(Bifurcation._io_file_names[4], self.p_array)
-        np_save(Bifurcation._io_file_names[5], self.u0)
-        np_save(Bifurcation._io_file_names[6], self.tspan)
-        np_save(Bifurcation._io_file_names[7], self.mode)
-        np_save(Bifurcation._io_file_names[8], self.u0_forward)
-        np_save(Bifurcation._io_file_names[9], self.solver)
+        np_savez(Bifurcation._io_file_names[1], bif_mat=self.bif_mat, p_ind=self.p_ind, p=self.p, p_array=self.p_array, u0=self.u0, tspan=self.tspan, mode=self.mode, u0_forward=self.u0_forward, solver=self.solver)
         with ZipFile(file, mode="w") as archive:
             for filename in Bifurcation._io_file_names:
                 archive.write(filename)

@@ -1,11 +1,4 @@
-
-qand.egg-info/dependency_links.txt
-qand.egg-info/PKG-INFO
-qand.egg-info/SOURCES.txt
-qand.egg-info/top_level.txt
-qand/__pycache__/__init__.cpython-310.pyc
-qand/__pycache__/diffeq.cpython-310.pyc
-qand/__pycache__/trajectory.cpython-310.pyc
+qand.egg-info/
+__pycache__*
 setup.bat
-qand/__pycache__/bifurcation.cpython-310.pyc
-examples/01 - Lorenz attractor trajectory and time series/__pycache__/run.cpython-310.pyc
+
