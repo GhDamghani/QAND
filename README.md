@@ -1,6 +1,9 @@
+<h1 align="center">
+<img src="qand_logo.jpg" width="200" style="border-radius:20%">
+</h1>
+
 # QAND
 Quantitative and Algebraic Nonlinear Dynamics
-
 ## Dependencies
 
 * Python (Preferred with a [conda](https://docs.conda.io/en/latest/miniconda.html) environment)
@@ -17,4 +20,3 @@ Now you can Install QAND. Change directory to the package parent folder and run 
 
 ## Name
 QAND (/qænd/) Means sugar cube in Persian.
-![QAND Logo](qand_logo.jpg)
