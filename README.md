@@ -22,5 +22,5 @@ Now you can Install QAND. Change directory to the package parent folder and run 
 * `pip install -e .`
 
 ## Name
-QAND (/qænd/) Means Sugar Cubes in Persian.
+QAND (/qænd/) Means sugar cube in Persian.
 ![QAND Logo](qand_logo.jpg)
