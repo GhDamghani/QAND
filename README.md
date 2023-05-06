@@ -11,4 +11,4 @@
 
 
 QAND Means Sugar Cubes in Persian.
-![Sugar Cubes](qand.jpg)
+![QAND Logo](qand.jpg)
