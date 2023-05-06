@@ -4,7 +4,6 @@
 
 # QAND
 Quantitative and Algebraic Nonlinear Dynamics
-
 ## Dependencies
 
 * Python (Preferred with a [conda](https://docs.conda.io/en/latest/miniconda.html) environment)
