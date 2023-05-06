@@ -4,13 +4,15 @@ from julia import Main
 from numpy import save as np_save, load as np_load, savez_compressed as np_savez
 from zipfile import ZipFile
 from functools import partial
-from os import getcwd, chdir, listdir, remove
+from os import getcwd, chdir
 from scipy.signal import find_peaks
 from numpy import diff
-import warnings
-import tempfile
-np_save = partial(np_save, allow_pickle = True)
-np_load = partial(np_load, allow_pickle = True)
+from warnings import warn
+from tempfile import TemporaryDirectory
+from re import search
+from tqdm import tqdm as _tqdm
+np_save = partial(np_save, allow_pickle = False)
+np_load = partial(np_load, allow_pickle = False)
 
 
 class DiffEq:
@@ -21,10 +23,10 @@ class DiffEq:
         self.ndim = ndim
     
     def get_julia_func_name(self):
-        import re
+        
         regex = r"<PyCall.jlwrap (\S+)>"
         test_str = self.diffeq.__repr__()
-        matches = re.search(regex, test_str)
+        matches = search(regex, test_str)
         if matches:
             func_name = matches.groups()[0]
             return func_name
@@ -32,7 +34,7 @@ class DiffEq:
             raise TypeError("It's not a Julia Function (PyCall.jlwrap)")
     
     def save(self, file) -> None:
-        with tempfile.TemporaryDirectory(suffix='DiffEq') as tmpdirname:
+        with TemporaryDirectory(suffix='DiffEq') as tmpdirname:
             func_name = self.get_julia_func_name()
             curdirname = getcwd()
             chdir(tmpdirname)
@@ -50,7 +52,7 @@ class DiffEq:
     
     @classmethod
     def load(cls, file):
-        with tempfile.TemporaryDirectory(suffix='DiffEq') as tmpdirname:
+        with TemporaryDirectory(suffix='DiffEq') as tmpdirname:
             curdirname = getcwd()
             with ZipFile(file, mode="r") as archive:
                 chdir(tmpdirname)
@@ -79,7 +81,7 @@ class DiffEq:
         t = sol.t[ind:]
         u = transpose(sol.u[ind:])
         if t[-1] != tspan[-1]:
-            warnings.warn(f'System {self.get_julia_func_name()} with this configuration is unbounded, list timepoint saved: {sol.t[-1]}', UserWarning)
+            warn(f'System {self.get_julia_func_name()} with this configuration is unbounded, list timepoint saved: {sol.t[-1]}', UserWarning)
         traj = Trajectory(self, t=t, u=u, p=p, u0=u0, tspan=tspan, solver=solver)
         return traj
 
@@ -102,8 +104,7 @@ class DiffEq:
         if print_max_num_points:
             max_num_points = 0
         if tqdm:
-            from tqdm import tqdm as tqdm_
-            p_array_range = tqdm_(p_array_range)
+            p_array_range = _tqdm(p_array_range)
 
         for i in p_array_range:
             p[p_ind] = p_array[i]
@@ -121,7 +122,7 @@ class DiffEq:
                     max_num_points = points_n
                     print_str = f'Current max num points: {max_num_points} at p={p[p_ind]}, ind={i}/{p_array_len}'
                     if tqdm:
-                        tqdm_.write(print_str)
+                        _tqdm.write(print_str)
                     else:
                         print(print_str)
             num_points_ = min(num_points, points_n)
@@ -150,7 +151,7 @@ class Trajectory:
         self.solver = solver
     
     def save(self, file) -> None:
-        with tempfile.TemporaryDirectory(suffix='Trajectory') as tmpdirname:
+        with TemporaryDirectory(suffix='Trajectory') as tmpdirname:
             curdirname = getcwd()
             chdir(tmpdirname)
             self.diffeq.save(Trajectory._io_file_names[0])
@@ -165,7 +166,7 @@ class Trajectory:
 
     @classmethod
     def load(cls, file):
-        with tempfile.TemporaryDirectory(suffix='Trajectory') as tmpdirname:
+        with TemporaryDirectory(suffix='Trajectory') as tmpdirname:
             curdirname = getcwd()
             with ZipFile(file, mode="r") as archive:
                 chdir(tmpdirname)
@@ -238,7 +239,7 @@ class Bifurcation:
         self.solver = solver
     
     def save(self, file) -> None:
-        with tempfile.TemporaryDirectory(suffix='Bifurcation') as tmpdirname:
+        with TemporaryDirectory(suffix='Bifurcation') as tmpdirname:
             curdirname = getcwd()
             chdir(tmpdirname)
             self.diffeq.save(Bifurcation._io_file_names[0])
@@ -253,7 +254,7 @@ class Bifurcation:
     
     @staticmethod
     def load(file):
-        with tempfile.TemporaryDirectory(suffix='Bifurcation') as tmpdirname:
+        with TemporaryDirectory(suffix='Bifurcation') as tmpdirname:
             curdirname = getcwd()
             with ZipFile(file, mode="r") as archive:
                 chdir(tmpdirname)

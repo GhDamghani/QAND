@@ -15,6 +15,7 @@ setup(name='qand',
         "numpy",
         "matplotlib",
         "scipy",
+        "tqdm",
         "julia",
         "diffeqpy"
     ],

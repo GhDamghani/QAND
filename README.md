@@ -9,10 +9,6 @@ Quantitative and Algebraic Nonlinear Dynamics
     conda activate qand_env # optional
     pip install --upgrade pip setuptools wheel # optional
     ```
-* numpy and matplotlib
-    ```Python
-    pip install matplotlib scipy # automatically installs numpy as well
-    ```
 * PyJulia ([Installation Guide](https://pyjulia.readthedocs.io/en/latest/installation.html))
 * diffeqpy ([Installation Guide](https://pypi.org/project/diffeqpy/))
 
