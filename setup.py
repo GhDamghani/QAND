@@ -9,7 +9,7 @@ setup(name='qand',
       version='0.1',
       description='Quantitative and Algebraic Nonlinear Dynamics',
       author='Hossein Ghasem Damghani',
-      license='GNU',
+      license='GPL-3.0',
       zip_safe=False,
       install_requires=[
         "numpy",
