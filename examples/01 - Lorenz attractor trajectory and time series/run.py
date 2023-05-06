@@ -1,13 +1,8 @@
 import qand
 import matplotlib.pyplot as plt
-from julia import Main
 from os import listdir
 
-
-
-f = Main.eval(open('lorenz.jl', 'r').read())
-
-sys1 = qand.DiffEq(f, 3)
+sys1 = qand.DiffEq('lorenz.jl', 3)
 u0 = [1.0, 0.0, 0.0]
 tspan = (0., 100.)
 p = [10.0, 28.0, 8/3]

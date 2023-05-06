@@ -1,11 +1,8 @@
 import qand
 import matplotlib.pyplot as plt
 from numpy import linspace
-from julia import Main
 
-f = Main.eval(open('ES1.jl', 'r').read())
-
-sys1 = qand.DiffEq(f, 3)
+sys1 = qand.DiffEq('ES1.jl', 3)
 u0 = [6., 0., -1.0]
 tspan = (0., 2000.)
 p = [1.54]

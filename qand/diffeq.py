@@ -5,21 +5,25 @@ from numpy import save as np_save, load as np_load, savez_compressed as np_savez
 from zipfile import ZipFile
 from functools import partial
 from os import getcwd, chdir
+from os.path import isfile
 from scipy.signal import find_peaks
 from numpy import diff
 from warnings import warn
 from tempfile import TemporaryDirectory
 from re import search
 from tqdm import tqdm as _tqdm
-np_save = partial(np_save, allow_pickle = False)
-np_load = partial(np_load, allow_pickle = False)
+np_save = partial(np_save, allow_pickle = True)
+np_load = partial(np_load, allow_pickle = True)
 
 
 class DiffEq:
     '''Base class for Ordinary Differential Equations'''
     _io_file_names = ('diffeq', 'ndim.npy')
     def __init__(self, diffeq, ndim) -> None:
-        self.diffeq = diffeq
+        if isinstance(diffeq, str) and isfile(diffeq):
+            self.diffeq = Main.eval(open(diffeq, 'r').read())
+        else:
+            self.diffeq = diffeq
         self.ndim = ndim
     
     def get_julia_func_name(self):
@@ -94,7 +98,7 @@ class DiffEq:
                     u0_array[i+1] = u0_array[i]
 
     
-    def bifurcation(self, p_ind, p, p_array, u0, tspan, transient=1, mode='max', reltol=1E-4, abstol=1E-4, time_res=1E-2, u0_forward=False, num_points=500, tqdm=False, print_max_num_points=False):
+    def bifurcation(self, p_ind, p, p_array, u0, tspan, transient=10, mode='max', reltol=1E-4, abstol=1E-4, time_res=1E-2, u0_forward=False, num_points=500, tqdm=False, print_max_num_points=False):
         assert p_array.ndim == 1
         p_array_len = p_array.shape[0]
         bif_mat = full((p_array_len, num_points), nan)
@@ -112,9 +116,8 @@ class DiffEq:
             traj = DiffEq.trajectory(self, u0_array[i], tspan, p, transient=transient, reltol=reltol,
                                      abstol=abstol, time_res=time_res)
             if traj.t[-1] != tspan[-1]:
-                break
-                # self._bif_nextstep_u0(i, p_array_len, u0_forward, u0_array, traj.u)
-                # continue
+                self._bif_nextstep_u0(i, p_array_len, u0_forward, u0_array, traj.u)
+                continue
             points, _ = traj.get_nonlinear_feature(mode=mode)
             points_n = points.shape[0]
             if print_max_num_points:
