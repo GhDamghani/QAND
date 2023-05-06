@@ -8,8 +8,6 @@ Quantitative and Algebraic Nonlinear Dynamics
     conda create -n qand_env python=3.10 # optional
     conda activate qand_env # optional
     pip install --upgrade pip setuptools wheel # optional
-    pip install numba # optional. if you install jupyter, install this first for numpy compatibility
-    pip install jupyter # optional for notebook use
     ```
 * numpy and matplotlib
     ```Python
