@@ -9,5 +9,14 @@ setup(name='qand',
       version='0.1',
       description='Quantitative and Algebraic Nonlinear Dynamics',
       author='Hossein Ghasem Damghani',
+      license='GNU',
+      zip_safe=False,
+      install_requires=[
+        "numpy",
+        "matplotlib",
+        "scipy",
+        "julia",
+        "diffeqpy"
+    ],
       packages=find_packages(),
       )
