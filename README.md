@@ -37,8 +37,8 @@ TODO:
     * Lyapunov exponent analysis
     * Stability Analysis
     * Basin of Attraction Analysis
-    * Predefining Famous Systems
     * Save/Load for new objects
+    * Predefining Famous Systems
 * Maps
     * Definition in Numba
     * Sequence series
@@ -49,7 +49,7 @@ TODO:
     * Definition
     * Coupling Matrix and Topology analysis
     * Predefining Famous Topologies
-    * Synchronization / Chimera states detection
+    * Synchronization/Chimera states detection
     * MSF analysis
     * Save/Load
 
