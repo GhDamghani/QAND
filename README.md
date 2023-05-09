@@ -37,15 +37,18 @@ TODO:
     * Lyapunov exponent analysis
     * Stability Analysis
     * Basin of Attraction Analysis
+    * Predefining Famous Systems
     * Save/Load for new objects
 * Maps
     * Definition in Numba
     * Sequence series
     * Bifurcation
     * Save/Load
+    * Predefining Famous Maps
 * Complex Networks
     * Definition
     * Coupling Matrix and Topology analysis
+    * Predefining Famous Topologies
     * Synchronization / Chimera states detection
     * MSF analysis
     * Save/Load
