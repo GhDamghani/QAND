@@ -18,5 +18,37 @@ Quantitative and Algebraic Nonlinear Dynamics
 Now you can Install QAND. Change directory to the package parent folder and run this:
 * `pip install -e .`
 
+## Features
+
+So far, this items have been developed
+
+* System of Ordinary Differential Equations
+    * Defining in Julia script.
+    * Time Series/Trajectory from an initial point.
+    * Bifurcation analysis with multiple nonlinear features (local min/max peaks, min/max intervals)
+    * Save/Load for Differential Equation/Trajectory/Bifurcation Objects.
+    * Plotting
+
+TODO:
+* Plotting Module
+* System of Ordinary Differential Equations
+    * Algebraic Definition
+    * Solving algebraically for equilibrium points
+    * Lyapunov exponent analysis
+    * Stability Analysis
+    * Basin of Attraction Analysis
+    * Save/Load for new objects
+* Maps
+    * Definition in Numba
+    * Sequence series
+    * Bifurcation
+    * Save/Load
+* Complex Networks
+    * Definition
+    * Coupling Matrix and Topology analysis
+    * Synchronization / Chimera states detection
+    * MSF analysis
+    * Save/Load
+
 ## Name
-QAND (/qænd/) Means sugar cube in Persian.
+QAND (/qænd/) Means sugar cube in Persian. You can enjoy them with some hot saffron tea 🍵.
