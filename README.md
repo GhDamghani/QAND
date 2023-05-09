@@ -34,7 +34,7 @@ TODO:
 * System of Ordinary Differential Equations
     * Algebraic Definition
     * Solving algebraically for equilibrium points
-    * Lyapunov exponent analysis
+    * Lyapunov exponent analysis/Fractal dimension calculation
     * Stability Analysis
     * Basin of Attraction Analysis
     * Save/Load for new objects
