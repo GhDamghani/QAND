@@ -20,7 +20,7 @@ Now you can Install QAND. Change directory to the package parent folder and run 
 
 ## Features
 
-So far, this items have been developed
+So far, these items have been developed
 
 * System of Ordinary Differential Equations
     * Defining in Julia script.
