@@ -54,4 +54,4 @@ TODO:
     * Save/Load
 
 ## Name
-QAND (/qænd/) Means sugar cube in Persian. You can enjoy them with some hot saffron tea 🍵.
+QAND (/ɢænd/) Means sugar cube in Persian. You can enjoy them with some hot saffron tea 🍵.
