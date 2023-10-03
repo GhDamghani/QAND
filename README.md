@@ -1,5 +1,5 @@
 <h1 align="center">
-<img src="qand_logo.jpg" width="200" style="border-radius:20%">
+<img src="qand_logo.jpeg" width="200" style="border-radius:20%">
 </h1>
 
 # QAND
